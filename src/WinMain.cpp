@@ -14,6 +14,7 @@
 int WINAPI WinMain(HINSTANCE, HINSTANCE, PSTR, int);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
+
 #if _DEBUG
 #pragma comment( linker, "/subsystem:console" )
 int main(int argc, const char** argv) {
@@ -22,7 +23,6 @@ int main(int argc, const char** argv) {
 #else
 #pragma comment( linker, "/subsystem:windows" )
 #endif
-#pragma comment(lib, "opengl32.lib")
 
 #define WGL_CONTEXT_MAJOR_VERSION_ARB     0x2091
 #define WGL_CONTEXT_MINOR_VERSION_ARB     0x2092
