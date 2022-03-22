@@ -79,6 +79,12 @@ quat operator*(const quat &a, const quat& b) {
     );
 }
 
+vec3 operator*(const quat &q, const vec3& v) {
+    return (q.vector * 2.0f * dot(q.vector, v))
+    + (v * ((q.scalar * q.scalar) - dot(q.vector, q.vector)))
+    + (cross(q.vector, v) * 2.0f * q.scalar);
+}
+
 quat operator-(const quat &q)
 {
     return quat(-q.x, -q.y, -q.z, -q.w);
@@ -92,6 +98,16 @@ bool operator==(const quat &a, const quat &b)
 bool operator!=(const quat &a, const quat &b)
 {
     return !(a == b);
+}
+
+quat operator^(const quat& q, float f) {
+    auto angle = 2.0f * acosf(q.scalar);
+    auto axis = normalized(q.vector);
+    
+    auto halfCos = cosf(f * angle * 0.5f);
+    auto halfSin = sinf(f * angle * 0.5f);
+
+    return quat(axis.x * halfSin, axis.y * halfSin, axis.z * halfSin, halfCos);
 }
 
 bool sameOrientation(const quat &a, const quat &b)
@@ -165,3 +181,70 @@ quat inverse(const quat &q)
     float il = 1.0f / length;
     return quat(-q.x * il, -q.y * il, -q.z * il, -q.w * il);
 }
+
+quat mix(const quat& from, const quat& to, float dt) {
+    return from * (1.0f - dt) + to * dt;
+}
+
+quat nlerp(const quat& from, const quat& to, float dt) {
+    return normalized(from + (to - from)*dt);
+}
+
+quat slerp(const quat& start, const quat& end, float dt) {
+    if (fabsf(dot(start, end) > 1.0f - QUAT_EPSILON)) {
+        return nlerp(start, end, dt);
+    }
+
+    // TODO: Input should be normalized, thus we can use the cheaper
+    // conjugate instead. Consider this when we know wtf we're doing.
+    quat delta = inverse(start) * end;
+    return normalized((delta^dt) * start);
+}
+
+quat lookRotation(const vec3& direction, const vec3& up) {
+    // Find orthonormal basis vectors
+    vec3 f = normalized(direction); // Object forward
+    vec3 u =  normalized(up); // desired up
+    vec3 r = cross(u, f);
+    u = cross(f , r); // Object up
+
+    // From world forward to object forward
+    quat worldToObject = fromTo(vec3(0, 0, 1), f);
+
+    // What direction is the new object up?
+    vec3 objectUp = worldToObject * vec3(0, 1, 0);
+    // From object up to desired up
+    quat u2u = fromTo(objectUp, u);
+
+    // Rotate to forward direction first
+    // then twist to correct up
+    quat result = worldToObject * u2u;
+    return normalized(result);
+}
+
+mat4 quatToMat4(const quat& q) {
+    vec3 r = q * vec3(1, 0, 0);
+    vec3 u = q * vec3(0, 1, 0);
+    vec3 f = q * vec3(0, 0, 1);
+
+    return mat4(
+        r.x, r.y, r.z, 0,
+        u.x, u.y, u.z, 0,
+        f.x, f.y, f.z, 0,
+          0,   0,   0, 1 
+    );
+}
+
+quat mat4ToQuat(const mat4& m) {
+    vec3 up = normalized(vec3(m.up.x, m.up.y, m.up.z));
+    vec3 forward = normalized(vec3(m.forward.x, m.forward.y, m.forward.z));
+
+    // Use cross product to make sure the resulting vectors are 
+    // orthogonal.
+    // Matrices can also include scale.
+    vec3 right = cross(up, forward);
+    up = cross(forward, right);
+
+    return lookRotation(forward, up);
+}
+    

@@ -3,6 +3,7 @@
 
 #include "vec3.h"
 #include "vec4.h"
+#include "mat4.h"
 
 #define QUAT_EPSILON 0.000001f
 
@@ -33,9 +34,11 @@ quat operator+(const quat& a, const quat&b);
 quat operator-(const quat& a, const quat&b);
 quat operator*(const quat &a, float b);
 quat operator*(const quat &a, const quat& b);
+vec3 operator*(const quat &q, const vec3& v);
 quat operator-(const quat& q);
 bool operator==(const quat& a, const quat& b);
 bool operator!=(const quat& a, const quat& b);
+quat operator^(const quat& q, float f);
 
 bool sameOrientation(const quat& a, const quat& b);
 float dot(const quat& a, const quat& b);
@@ -46,5 +49,14 @@ void normalize(quat& q);
 quat normalized(const quat& q);
 quat conjugate(const quat& q);
 quat inverse(const quat& q);
+
+quat mix(const quat& from, const quat& to, float dt);
+quat nlerp(const quat& from, const quat& to, float dt);
+quat slerp(const quat& start, const quat& end, float dt);
+
+quat lookRotation(const vec3& direction, const vec3& up);
+
+mat4 quatToMat4(const quat& q);
+quat mat4ToQuat(const mat4& m);
 
 #endif
