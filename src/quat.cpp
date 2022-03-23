@@ -240,8 +240,7 @@ quat mat4ToQuat(const mat4& m) {
     vec3 forward = normalized(vec3(m.forward.x, m.forward.y, m.forward.z));
 
     // Use cross product to make sure the resulting vectors are 
-    // orthogonal.
-    // Matrices can also include scale.
+    // orthogonal, and normalized, to avoid bringing in scaling.    
     vec3 right = cross(up, forward);
     up = cross(forward, right);
 
