@@ -155,7 +155,7 @@ quat normalized(const quat &q)
     float length = len(q);
     if (length < QUAT_EPSILON)
     {
-        return;
+        return quat(0, 0, 0, 1);
     }
     float il = 1.0f / length;
 

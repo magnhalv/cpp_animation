@@ -10,6 +10,7 @@
 #include <windows.h>
 #include <iostream>
 #include "Application.h"
+#include "quat.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, PSTR, int);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -125,6 +126,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 	else { // !swapControlSupported
 		std::cout << "WGL_EXT_swap_control not supported\n";
 	}
+
+	quat q = quat(0, 0, 0, 1);
 
 	glGenVertexArrays(1, &gVertexArrayObject);
 	glBindVertexArray(gVertexArrayObject);
