@@ -10,11 +10,10 @@
 #include <windows.h>
 #include <iostream>
 #include "Application.h"
-#include "quat.h"
+#include "Sample.h" // TODO: HERE
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, PSTR, int);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-
 
 #if _DEBUG
 #pragma comment( linker, "/subsystem:console" )
@@ -24,6 +23,7 @@ int main(int argc, const char** argv) {
 #else
 #pragma comment( linker, "/subsystem:windows" )
 #endif
+#pragma comment(lib, "opengl32.lib")
 
 #define WGL_CONTEXT_MAJOR_VERSION_ARB     0x2091
 #define WGL_CONTEXT_MINOR_VERSION_ARB     0x2092
@@ -40,7 +40,7 @@ Application* gApplication = 0;
 GLuint gVertexArrayObject = 0;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow) {
-	gApplication = new Application();
+	gApplication = new Sample();
 	WNDCLASSEX wndclass;
 	wndclass.cbSize = sizeof(WNDCLASSEX);
 	wndclass.style = CS_HREDRAW | CS_VREDRAW;
@@ -126,8 +126,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 	else { // !swapControlSupported
 		std::cout << "WGL_EXT_swap_control not supported\n";
 	}
-
-	quat q = quat(0, 0, 0, 1);
 
 	glGenVertexArrays(1, &gVertexArrayObject);
 	glBindVertexArray(gVertexArrayObject);
@@ -224,4 +222,3 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
 	return DefWindowProc(hwnd, iMsg, wParam, lParam);
 }
 
- 
