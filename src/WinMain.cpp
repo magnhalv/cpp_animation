@@ -10,7 +10,7 @@
 #include <windows.h>
 #include <iostream>
 #include "Application.h"
-#include "Sample.h" // TODO: HERE
+#include "sample.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, PSTR, int);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);

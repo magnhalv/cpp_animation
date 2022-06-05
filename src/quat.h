@@ -59,4 +59,6 @@ quat lookRotation(const vec3& direction, const vec3& up);
 mat4 quatToMat4(const quat& q);
 quat mat4ToQuat(const mat4& m);
 
+quat angle_axis(float angle, const vec3 &axis);
+
 #endif
