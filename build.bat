@@ -6,5 +6,5 @@ set CommonLinkerFlags= -incremental:no -opt:ref user32.lib Gdi32.lib winmm.lib o
 IF NOT EXIST build mkdir build
 pushd build
 
-cl /Feanimation.exe %CommonCompilerFlags%  ../src/*.cpp ../src/glad.c /link %CommonLinkerFlags%
+cl /Feanimation.exe %CommonCompilerFlags%  ../src/*.cpp ../src/glad.c ../src/cgltf.c /link %CommonLinkerFlags%
 popd

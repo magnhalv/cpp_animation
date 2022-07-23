@@ -1,29 +1,32 @@
-#ifndef _H_SAMPLE_
-#define _H_SAMPLE_
-
-#include "vec3.h"
-#include "vec2.h"
+#ifndef _H_Sample_
+#define _H_Sample_
 
 #include "Application.h"
-#include "shader.h"
-#include "attribute.h"
-#include "index_buffer.h"
-#include "texture.h"
-
-#define DEG2RAD 0.0174533f
+#include "DebugDraw.h"
+#include "Track.h"
+#include <vector>
 
 class Sample : public Application {
 protected:
-	Shader* mShader;
-	Attribute<vec3>* mVertexPositions;
-	Attribute<vec3>* mVertexNormals;
-	Attribute<vec2>* mVertexTexCoords;
-	IndexBuffer* mIndexBuffer;
-	Texture* mDisplayTexture;
-	float mRotation;
+	std::vector<ScalarTrack> mScalarTracks;
+	std::vector<bool> mScalarTracksLooping;
+
+	DebugDraw* mScalarTrackLines;
+	DebugDraw* mHandleLines;
+	DebugDraw* mHandlePoints;
+	DebugDraw* mReferenceLines;
+private:
+	ScalarFrame MakeFrame(float time, float value);
+	ScalarFrame MakeFrame(float time, float in, float value, float out);
+	VectorFrame MakeFrame(float time, const vec3& value);
+	VectorFrame MakeFrame(float time, const vec3& in, const vec3& value, const vec3& out);
+	QuaternionFrame MakeFrame(float time, const quat& value);
+	QuaternionFrame MakeFrame(float time, const quat& in, const quat& out, const quat& value);
+	ScalarTrack MakeScalarTrack(Interpolation interp, int numFrames, ...);
+	VectorTrack MakeVectorTrack(Interpolation interp, int numFrames, ...);
+	QuaternionTrack MakeQuaternionTrack(Interpolation interp, int numFrames, ...);
 public:
 	void Initialize();
-	void Update(float inDeltaTime);
 	void Render(float inAspectRatio);
 	void Shutdown();
 };
